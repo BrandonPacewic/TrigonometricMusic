@@ -2,12 +2,12 @@ from typing import List, Tuple
 import pygame
 
 class window:
-    WIDTH = int(900)
+    WIDTH = int(1600)
     HEIGHT = int(WIDTH/(16/9))
     DISPLAY = (WIDTH, HEIGHT)
 
 
-FPS = 60
+FPS = int(60)
 WIN = pygame.display.set_mode(window.DISPLAY)
 pygame.display.set_caption("Trigonometric Music")
 
@@ -26,7 +26,7 @@ class box:
 
 
 def _create_bounds(win: Tuple[int, int]) -> List[box]:
-    THICKNESS = 5
+    THICKNESS = int(3)
     return [
         box(0, 0, win[0], THICKNESS),
         box(0, 0, THICKNESS, win[1]),
