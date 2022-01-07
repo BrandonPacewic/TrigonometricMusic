@@ -1,0 +1,2 @@
+class bounds:
+    pass
