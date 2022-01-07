@@ -2,7 +2,7 @@ from typing import List, Tuple
 import pygame
 
 class window:
-    WIDTH = int(1920)
+    WIDTH = int(900)
     HEIGHT = int(WIDTH/(16/9))
     DISPLAY = (WIDTH, HEIGHT)
 
@@ -30,7 +30,7 @@ def _create_bounds(win: Tuple[int, int]) -> List[box]:
     return [
         box(0, 0, win[0], THICKNESS),
         box(0, 0, THICKNESS, win[1]),
-        box(0, win[1] - THICKNESS, win[0], THICKNESS),
+        box(THICKNESS, win[1] - THICKNESS, win[0], THICKNESS),
         box(win[0] - THICKNESS, 0, THICKNESS, win[1]),
     ]
 
