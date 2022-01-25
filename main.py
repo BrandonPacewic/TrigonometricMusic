@@ -11,9 +11,12 @@ class window:
     DISPLAY = (WIDTH, HEIGHT)
 
 
-FPS = int(60)
+FPS = int(200)
 WIN = pygame.display.set_mode(window.DISPLAY)
 pygame.display.set_caption('Trigonometric Music')
+
+UNIT_CIRCLE = (315, 500, 300)
+MAX_PIXELS = int(1000)
 
 
 class box:
@@ -25,19 +28,34 @@ class box:
         self.pyRect = pygame.Rect(x, y, width, height)
 
     def draw(self, win: Tuple[int, int]) -> None:
-        COLOR = (255, 255, 255)
-        pygame.draw.rect(win, COLOR, self.pyRect)
+        color = (255, 255, 255)
+        pygame.draw.rect(win, color, self.pyRect)
 
 
 class round:
-    def __init__(self, x: int, y: int, radius: int) -> None:
-        self.center = [x, y]
-        self.radius = radius
-        self.pyCircle = pygame.Circle(center, radius)
+    def __init__(self, x: int, y: int, radi: int) -> None:
+        self.x = x
+        self.y = y
+        self.center = (x, y)
+        self.radi = radi
+
+    def update(self) -> None:
+        self.center = (self.x, self.y)
 
     def draw(self, win: Tuple[int, int]) -> None:
-        COLOR = (255, 255, 255)
-        pygame.draw.circle(win, COLOR, self.pyCircle)
+        velo = .9
+        color = (255, 0, 255)
+        pygame.draw.circle(win, color, self.center, self.radi)
+        self.x += velo
+
+    @staticmethod
+    def createRound(xOffset: int, yOffset: int) -> Tuple[int, round]:
+        change = 1
+        size = 5
+        muti = 1
+        yPos = (math.degrees(math.sin(angle)) * muti) + yOffset
+
+        return (angle + change) % 360, round(xOffset, yPos, size)
 
 
 def _create_bounds(win: Tuple[int, int]) -> List[box]:
@@ -50,10 +68,16 @@ def _create_bounds(win: Tuple[int, int]) -> List[box]:
     ]
 
 
-def render(bounds: List[box]) -> None:
+def render(pixels: List[round], bounds: List[box]) -> None:
     WIN.fill((0, 0, 0))
+    # pygame.draw.circle(WIN, (255, 0, 255), UNIT_CIRCLE[:-1], UNIT_CIRCLE[2])
+
     for bound in bounds:
         bound.draw(WIN)
+
+    for pixel in pixels:
+        pixel.draw(WIN)
+        pixel.update()
 
     pygame.display.update()
 
@@ -62,13 +86,20 @@ def main():
     clock = pygame.time.Clock()
     bounds = _create_bounds(window.DISPLAY)
 
+    global angle; angle = 0
+    pixels = []
+
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type is pygame.QUIT:
                 exit()
 
-        render(bounds)
+        if len(pixels) < MAX_PIXELS:
+            angle, newRound = round.createRound(500, 300)
+            pixels.append(newRound)
+            print(f'{angle=}, {len(pixels)=}')
+            render(pixels, bounds=bounds)
 
 
 if __name__ == '__main__':
