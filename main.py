@@ -33,26 +33,26 @@ class box:
 
 
 class round:
-    def __init__(self, x: int, y: int, radi: int) -> None:
+    def __init__(self, x: int, y: int, radi: int, velo: int = 1) -> None:
         self.x = x
         self.y = y
         self.center = (x, y)
+        self.velo = velo
         self.radi = radi
 
     def update(self) -> None:
         self.center = (self.x, self.y)
 
     def draw(self, win: Tuple[int, int]) -> None:
-        velo = .9
-        color = (255, 0, 255)
+        color = (255, 50, 50)
         pygame.draw.circle(win, color, self.center, self.radi)
-        self.x += velo
+        self.x += self.velo
 
     @staticmethod
     def createRound(xOffset: int, yOffset: int) -> Tuple[int, round]:
-        change = 1
+        change = 5
         size = 5
-        muti = 1
+        muti = 1.5
         yPos = (math.degrees(math.sin(angle)) * muti) + yOffset
 
         return (angle + change) % 360, round(xOffset, yPos, size)
@@ -95,11 +95,13 @@ def main():
             if event.type is pygame.QUIT:
                 exit()
 
-        if len(pixels) < MAX_PIXELS:
-            angle, newRound = round.createRound(500, 300)
-            pixels.append(newRound)
-            print(f'{angle=}, {len(pixels)=}')
-            render(pixels, bounds=bounds)
+        if len(pixels) > MAX_PIXELS:
+            pixels.pop(0)
+
+        angle, newRound = round.createRound(500, 300)
+        pixels.append(newRound)
+        print(f'{angle=}, {len(pixels)=}')
+        render(pixels, bounds=bounds)
 
 
 if __name__ == '__main__':
