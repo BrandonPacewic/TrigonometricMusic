@@ -5,11 +5,28 @@ from typing import List, Tuple
 import logging
 import math
 import pygame
+import time
 
 """Should be removed after finished"""
 def test(*values: object) -> None:
+    logFile = 'consoleLog.txt'
+
     for value in values:
         logging.debug(value)
+
+        try:
+            with open(logFile, 'a') as file:
+                file.write(f'{value}\n')
+        except OSError:
+            """If no write file just dont write"""
+            pass
+
+def clear_file(fname: str) -> None:
+    try:
+        with open(fname, 'w') as file:
+            file.write(str(time.perf_counter()))
+    except OSError:
+        pass
 
 
 class window:
@@ -105,6 +122,7 @@ def main():
         level=logging.DEBUG,
         format='[INFO] - %(asctime)s - %(message)s',
     )
+    clear_file('consoleLog.txt')
 
     clock = pygame.time.Clock()
     bounds = create_bounds(window.DISPLAY)
@@ -121,9 +139,9 @@ def main():
         if len(pixels) > MAX_PIXELS:
             pixels.pop(0)
 
-        angle, newRound = round.createRound(500, 300, angle)
+        angle, newRound = round.createRound(500, 500, angle)
         pixels.append(newRound)
-        test(f'{angle=}, {len(pixels)=}')
+        test(f'{angle=} {len(pixels)=}')
         render(pixels, bounds=bounds)
 
 
