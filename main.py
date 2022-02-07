@@ -2,8 +2,15 @@
 
 from typing import List, Tuple
 
+import logging
 import math
 import pygame
+
+"""Should be removed after finished"""
+def test(*values: object) -> None:
+    for value in values:
+        logging.debug(value)
+
 
 class window:
     WIDTH = int(1820)
@@ -18,15 +25,6 @@ pygame.display.set_caption('Trigonometric Music')
 MAX_PIXELS = int(1000)
 
 angle = 0
-color = (0, 0, 0)
-
-
-def cycle_colors(color: Tuple[int, int, int] = (0, 0, 0)) -> Tuple[int, int, int]:
-    change = 5
-    for val in color:
-        val = (val + change) % 255
-
-    return color
 
 
 class box:
@@ -42,19 +40,23 @@ class box:
 
 
 class round:
-    def __init__(self, x: int, y: int, radi: int, velo: int = 1) -> None:
+    def __init__(
+        self, x: int, y: int, radi: int, velo: int = 1, 
+        color: Tuple[int, int, int] = (0, 0, 0)
+    ) -> None:
         self.x = x
         self.y = y
         self.center = (x, y)
-        self.velo = velo
         self.radi = radi
+        self.velo = velo
+        self.color = color
 
     def update(self) -> None:
         self.center = (self.x, self.y)
+        self.color = round.cycle_colors(self.color)
 
     def draw(self, win: Tuple[int, int]) -> None:
-        color = cycle_colors(color)
-        pygame.draw.circle(win, color, self.center, self.radi)
+        pygame.draw.circle(win, self.color, self.center, self.radi)
         self.x += self.velo
 
     @staticmethod
@@ -63,12 +65,20 @@ class round:
         size = 5
         muti = 100
         yPos = (math.sin(angle) * muti) + yOffset
-        print(f'{yPos=}')
+        test(f'{yPos=}')
 
         return (angle + change) % 360, round(xOffset, yPos, size)
 
+    @staticmethod
+    def cycle_colors(color: Tuple[int, int, int]) -> Tuple[int, int, int]:
+        change = 5
+        for val in color:
+            val = (val + change) % 255
 
-def _create_bounds(win: Tuple[int, int]) -> List[box]:
+        return color
+        
+
+def create_bounds(win: Tuple[int, int]) -> List[box]:
     THICKNESS = int(3)
     return [
         box(0, 0, win[0], THICKNESS),
@@ -92,8 +102,13 @@ def render(pixels: List[round], bounds: List[box]) -> None:
 
 
 def main():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='[INFO] - %(asctime)s - %(message)s'
+    )
+
     clock = pygame.time.Clock()
-    bounds = _create_bounds(window.DISPLAY)
+    bounds = create_bounds(window.DISPLAY)
 
     pixels = []
 
@@ -108,7 +123,7 @@ def main():
 
         angle, newRound = round.createRound(500, 300)
         pixels.append(newRound)
-        print(f'{angle=}, {len(pixels)=}')
+        test(f'{angle=}, {len(pixels)=}')
         render(pixels, bounds=bounds)
 
 
