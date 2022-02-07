@@ -104,7 +104,7 @@ def render(pixels: List[round], bounds: List[box]) -> None:
 def main():
     logging.basicConfig(
         level=logging.DEBUG,
-        format='[INFO] - %(asctime)s - %(message)s'
+        format='[INFO] - %(asctime)s - %(message)s',
     )
 
     clock = pygame.time.Clock()
@@ -122,7 +122,7 @@ def main():
         if len(pixels) > MAX_PIXELS:
             pixels.pop(0)
 
-        angle,  newRound = round.createRound(500, 300)
+        angle, newRound = round.createRound(500, 300, angle)
         pixels.append(newRound)
         test(f'{angle=}, {len(pixels)=}')
         render(pixels, bounds=bounds)
