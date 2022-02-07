@@ -1,9 +1,11 @@
 #! /usr/bin/python3
 
+from scipy.io.wavfile import read, write
 from typing import List, Tuple
 
 import logging
 import math
+import numpy as np
 import pygame
 import time
 
