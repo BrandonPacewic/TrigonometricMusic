@@ -40,7 +40,7 @@ class box:
 class round:
     def __init__(
         self, x: int, y: int, radi: int, velo: int = 1, 
-        color: Tuple[int, int, int] = (255, 255, 255)
+        color: Tuple[int, int, int] = (255, 255, 255),
     ) -> None:
         self.x = x
         self.y = y
@@ -61,8 +61,8 @@ class round:
     def createRound(xOffset: int, yOffset: int, angle: int) -> Tuple[int, round]:
         change = 5
         size = 5
-        muti = 100
-        yPos = (math.degrees(math.sin(angle)) * muti) + yOffset
+        muti = 5
+        yPos = abs(int((math.degrees(math.sin(angle)) * muti) + yOffset))
         angle =  (angle + change) % 360
 
         test(f'{yPos=}')
@@ -72,10 +72,9 @@ class round:
     @staticmethod
     def cycle_colors(color: Tuple[int, int, int]) -> Tuple[int, int, int]:
         change = 5
-        for val in color:
-            val = (val + change) % 255
-
-        return color    
+        basic = color[0]
+        new = (basic + change) % 255
+        return (new, new, new)
 
 
 def create_bounds(win: Tuple[int, int]) -> List[box]:
