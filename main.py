@@ -18,13 +18,11 @@ class window:
     DISPLAY = (WIDTH, HEIGHT)
 
 
-FPS = int(30)
+FPS = int(60)
 WIN = pygame.display.set_mode(window.DISPLAY)
 pygame.display.set_caption('Trigonometric Music')
 
 MAX_PIXELS = int(1000)
-
-angle = 0
 
 
 class box:
@@ -42,7 +40,7 @@ class box:
 class round:
     def __init__(
         self, x: int, y: int, radi: int, velo: int = 1, 
-        color: Tuple[int, int, int] = (0, 0, 0)
+        color: Tuple[int, int, int] = (255, 255, 255)
     ) -> None:
         self.x = x
         self.y = y
@@ -60,14 +58,16 @@ class round:
         self.x += self.velo
 
     @staticmethod
-    def createRound(xOffset: int, yOffset: int) -> Tuple[int, round]:
-        change = 1
+    def createRound(xOffset: int, yOffset: int, angle: int) -> Tuple[int, round]:
+        change = 5
         size = 5
         muti = 100
-        yPos = (math.sin(angle) * muti) + yOffset
+        yPos = (math.degrees(math.sin(angle)) * muti) + yOffset
+        angle =  (angle + change) % 360
+
         test(f'{yPos=}')
 
-        return (angle + change) % 360, round(xOffset, yPos, size)
+        return angle, round(xOffset, yPos, size)
 
     @staticmethod
     def cycle_colors(color: Tuple[int, int, int]) -> Tuple[int, int, int]:
@@ -75,8 +75,8 @@ class round:
         for val in color:
             val = (val + change) % 255
 
-        return color
-        
+        return color    
+
 
 def create_bounds(win: Tuple[int, int]) -> List[box]:
     THICKNESS = int(3)
@@ -111,6 +111,7 @@ def main():
     bounds = create_bounds(window.DISPLAY)
 
     pixels = []
+    angle = int(0)
 
     while True:
         clock.tick(FPS)
@@ -121,7 +122,7 @@ def main():
         if len(pixels) > MAX_PIXELS:
             pixels.pop(0)
 
-        angle, newRound = round.createRound(500, 300)
+        angle,  newRound = round.createRound(500, 300)
         pixels.append(newRound)
         test(f'{angle=}, {len(pixels)=}')
         render(pixels, bounds=bounds)
