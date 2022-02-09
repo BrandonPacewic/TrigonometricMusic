@@ -131,6 +131,9 @@ dmypy.json
 # Console log txt
 consoleLog.txt
 
+# Test
+test.py
+
 # Audio
 *.mp3
 *.wav
