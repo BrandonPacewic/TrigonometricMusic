@@ -9,27 +9,14 @@ import numpy as np
 import pygame
 import time
 
+# ----------------------------------------------------------------
+
 """Should be removed after finished"""
 def test(*values: object) -> None:
-    logFile = 'consoleLog.txt'
-
     for value in values:
         logging.debug(value)
 
-        try:
-            with open(logFile, 'a') as file:
-                file.write(f'{value}\n')
-        except OSError:
-            """If no write file just dont write"""
-            pass
-
-def clear_file(fname: str) -> None:
-    try:
-        with open(fname, 'w') as file:
-            file.write(str(time.perf_counter()))
-    except OSError:
-        pass
-
+# ----------------------------------------------------------------
 
 class window:
     WIDTH = int(1820)
@@ -41,7 +28,7 @@ FPS = int(60)
 WIN = pygame.display.set_mode(window.DISPLAY)
 pygame.display.set_caption('Trigonometric Music')
 
-MAX_PIXELS = int(1000)
+MAX_PIXELS = int(2000)
 
 
 class box:
@@ -59,7 +46,7 @@ class box:
 class round:
     def __init__(
         self, x: int, y: int, radi: int, velo: int = 1, 
-        color: Tuple[int, int, int] = (255, 255, 255),
+        color: Tuple[int, int, int] = (0, 0, 0),
     ) -> None:
         self.x = x
         self.y = y
@@ -80,7 +67,7 @@ class round:
     def createRound(xOffset: int, yOffset: int, angle: int) -> Tuple[int, round]:
         change = 5
         size = 5
-        muti = 5
+        muti = 8.5
         yPos = abs(int((math.degrees(math.sin(angle)) * muti) + yOffset))
         angle =  (angle + change) % 360
 
@@ -90,7 +77,7 @@ class round:
 
     @staticmethod
     def cycle_colors(color: Tuple[int, int, int]) -> Tuple[int, int, int]:
-        change = 5
+        change = 2
         basic = color[0]
         new = (basic + change) % 255
         return (new, new, new)
@@ -124,7 +111,6 @@ def main():
         level=logging.DEBUG,
         format='[INFO] - %(asctime)s - %(message)s',
     )
-    clear_file('consoleLog.txt')
 
     clock = pygame.time.Clock()
     bounds = create_bounds(window.DISPLAY)
@@ -141,7 +127,7 @@ def main():
         if len(pixels) > MAX_PIXELS:
             pixels.pop(0)
 
-        angle, newRound = round.createRound(500, 500, angle)
+        angle, newRound = round.createRound(15, 510, angle)
         pixels.append(newRound)
         test(f'{angle=} {len(pixels)=}')
         render(pixels, bounds=bounds)
