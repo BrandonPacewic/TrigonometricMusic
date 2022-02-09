@@ -7,7 +7,6 @@ import logging
 import math
 import numpy as np
 import pygame
-import time
 
 # ----------------------------------------------------------------
 
@@ -93,6 +92,21 @@ def create_bounds(win: Tuple[int, int]) -> List[box]:
     ]
 
 
+def initalise_pixels() -> List[round]:
+    pixels = []
+    angle = 0
+
+    while len(pixels) < MAX_PIXELS:
+        angle, newRound = round.createRound(15, 510, angle)
+        pixels.append(newRound)
+
+        for pixel in pixels:
+            pixel.x += pixel.velo
+            pixel.update()
+
+    return pixels
+
+
 def render(pixels: List[round], bounds: List[box]) -> None:
     WIN.fill((0, 0, 0))
 
@@ -115,7 +129,7 @@ def main():
     clock = pygame.time.Clock()
     bounds = create_bounds(window.DISPLAY)
 
-    pixels = []
+    pixels = initalise_pixels()
     angle = int(0)
 
     while True:
@@ -129,7 +143,7 @@ def main():
 
         angle, newRound = round.createRound(15, 510, angle)
         pixels.append(newRound)
-        test(f'{angle=} {len(pixels)=}')
+        test(f'{angle=}')
         render(pixels, bounds=bounds)
 
 
