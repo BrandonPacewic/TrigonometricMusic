@@ -1,12 +1,13 @@
 #! /usr/bin/python3
 
-from scipy.io.wavfile import read, write
+from scipy.io.wavfile import read
 from typing import List, Tuple
 
 import logging
 import math
 import numpy as np
 import pygame
+import time
 
 # ----------------------------------------------------------------
 
@@ -23,11 +24,12 @@ class window:
     DISPLAY = (WIDTH, HEIGHT)
 
 
-FPS = int(60)
+fps = int(60)
 WIN = pygame.display.set_mode(window.DISPLAY)
 pygame.display.set_caption('Trigonometric Music')
 
 MAX_PIXELS = int(2000)
+AUDIO_FILE = 'burritoSynth.wav'
 
 
 class box:
@@ -126,6 +128,11 @@ def main():
         format='[INFO] - %(asctime)s - %(message)s',
     )
 
+    def update_freq(fname: str) -> int:
+        fs, _ = read(fname)
+        return fs % int((time.perf_counter() * 1000) % 244)
+
+    fps = update_freq(AUDIO_FILE)
     clock = pygame.time.Clock()
     bounds = create_bounds(window.DISPLAY)
 
@@ -133,7 +140,8 @@ def main():
     angle = int(0)
 
     while True:
-        clock.tick(FPS)
+        clock.tick(fps)
+
         for event in pygame.event.get():
             if event.type is pygame.QUIT:
                 exit()
