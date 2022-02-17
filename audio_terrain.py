@@ -1,12 +1,5 @@
 """
-    This creates a 3D mesh with perlin noise to simulate
-    a terrain. The mesh is animated by shifting the noise
-    to give a "fly-over" effect.
-
-    If you don't have pyOpenGL or opensimplex, then:
-
-    >>> pip install pyopengl
-    >>> pip install opensimplex
+    3D perlin noise mesh graph based on live audio
 """
 
 from opensimplex import OpenSimplex
@@ -21,11 +14,8 @@ import sys
 
 class Terrain(object):
     def __init__(self):
-        """
-        Initialize the graphics window and mesh surface
-        """
-
-        # setup the view window
+        """Initialize the graphics window and mesh surface"""
+        # Setup the view window
         self.app = QtGui.QApplication(sys.argv)
         self.window = gl.GLViewWidget()
         self.window.setWindowTitle('Terrain')
@@ -33,13 +23,12 @@ class Terrain(object):
         self.window.setCameraPosition(distance=30, elevation=12)
         self.window.show()
 
-        # constants and arrays
+        # Constants and arrays
         self.nsteps = 1.3
         self.offset = 0
         self.ypoints = np.arange(-20, 20 + self.nsteps, self.nsteps)
         self.xpoints = np.arange(-20, 20 + self.nsteps, self.nsteps)
         self.nfaces = len(self.ypoints)
-
         self.RATE = 44100
         self.CHUNK = len(self.xpoints) * len(self.ypoints)
 
@@ -53,12 +42,11 @@ class Terrain(object):
             frames_per_buffer=self.CHUNK,
         )
 
-        # perlin noise object
+        # Perlin noise object
         self.noise = OpenSimplex()
 
-        # create the veritices array
+        # Create the veritices array
         verts, faces, colors = self.mesh()
-
         self.mesh1 = gl.GLMeshItem(
             faces=faces,
             vertexes=verts,
@@ -114,10 +102,7 @@ class Terrain(object):
         return verts, faces, colors
 
     def update(self):
-        """
-        update the mesh and shift the noise each time
-        """
-
+        """Update the mesh and shift the noise each time"""
         wf_data = self.stream.read(self.CHUNK)
 
         verts, faces, colors = self.mesh(offset=self.offset, wf_data=wf_data)
@@ -125,16 +110,12 @@ class Terrain(object):
         self.offset -= 0.05
 
     def start(self):
-        """
-        get the graphics window open and setup
-        """
+        """Get the graphics window open and setup"""
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             QtGui.QApplication.instance().exec_()
 
     def animation(self, frametime=10):
-        """
-        calls the update method to run in a loop
-        """
+        """Calls the update method to run in a loop"""
         timer = QtCore.QTimer()
         timer.timeout.connect(self.update)
         timer.start(frametime)
