@@ -9,5 +9,9 @@ This code was heavily inspired by [markjay4k](https://github.com/markjay4k) orig
 
 <h2 align="center">Audio Generation</h2>
 <p align="center" width="100%">
+    <img src="https://github.com/BrandonPacewic/TrigonometricMusic/blob/master/images/audio_spectrum.gif">
+</p>
+
+<p align="center" width="100%">
     <img src="https://github.com/BrandonPacewic/TrigonometricMusic/blob/master/images/audio_terrain.gif">
 </p>
