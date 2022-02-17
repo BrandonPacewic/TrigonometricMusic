@@ -117,6 +117,10 @@ class Terrain(object):
         self.update()
 
 
+def main():
+    terrain = Terrain()
+    terrain.animation()
+
+
 if __name__ == '__main__':
-    t = Terrain()
-    t.animation()
+    main()
