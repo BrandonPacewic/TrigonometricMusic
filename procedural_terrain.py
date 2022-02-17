@@ -1,12 +1,5 @@
 """
-    This creates a 3D mesh with perlin noise to simulate
-    a terrain. The mesh is animated by shifting the noise
-    to give a "fly-over" effect.
-
-    If you don't have pyOpenGL or opensimplex, then:
-
-    >>> pip install pyopengl
-    >>> pip install opensimplex
+    3D perlin noise mesh graph using procedural generation
 """
 
 from opensimplex import OpenSimplex
@@ -19,11 +12,8 @@ import sys
 
 class Terrain(object):
     def __init__(self):
-        """
-        Initialize the graphics window and mesh
-        """
-
-        # setup the view window
+        """Initialize the graphics window and mesh"""
+        # Setup the view window
         self.app = QtGui.QApplication(sys.argv)
         self.w = gl.GLViewWidget()
         self.w.setGeometry(0, 110, 1920, 1080)
@@ -31,24 +21,24 @@ class Terrain(object):
         self.w.setWindowTitle('Terrain')
         self.w.setCameraPosition(distance=33, elevation=8)
 
-        # constants and arrays
+        # Constants and arrays
         self.nsteps = 1
         self.ypoints = range(-20, 22, self.nsteps)
         self.xpoints = range(-20, 22, self.nsteps)
         self.nfaces = len(self.ypoints)
         self.offset = 0
 
-        # perlin noise object
+        # Perlin noise object
         self.tmp = OpenSimplex()
 
-        # create the veritices array
+        # Create the veritices array
         verts = np.array([
             [
                 x, y, 1.5 * self.tmp.noise2(x=n / 5, y=m / 5)
             ] for n, x in enumerate(self.xpoints) for m, y in enumerate(self.ypoints)
         ], dtype=np.float32)
 
-        # create the faces and colors arrays
+        # Create the faces and colors arrays
         faces = []
         colors = []
         for m in range(self.nfaces - 1):
@@ -62,7 +52,7 @@ class Terrain(object):
         faces = np.array(faces)
         colors = np.array(colors)
 
-        # create the mesh item
+        # Create the mesh item
         self.m1 = gl.GLMeshItem(
             vertexes=verts,
             faces=faces, faceColors=colors,
@@ -72,9 +62,7 @@ class Terrain(object):
         self.w.addItem(self.m1)
 
     def update(self):
-        """
-        update the mesh and shift the noise each time
-        """
+        """Update the mesh and shift the noise each time"""
         verts = np.array([
             [
                 x, y, 2.5 * self.tmp.noise2(x=n / 5 + self.offset, y=m / 5 + self.offset)
@@ -100,16 +88,12 @@ class Terrain(object):
         self.offset -= 0.18
 
     def start(self):
-        """
-        get the graphics window open and setup
-        """
+        """Get the graphics window open and setup"""
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             QtGui.QApplication.instance().exec_()
 
     def animation(self):
-        """
-        calls the update method to run in a loop
-        """
+        """Calls the update method to run in a loop"""
         timer = QtCore.QTimer()
         timer.timeout.connect(self.update)
         timer.start(10)
